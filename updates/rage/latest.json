@@ -1,11 +1,11 @@
 {
   "version": "1.0.5",
   "notes": "Moved Discord webhook out of the public repo into a build-time secret. Rotate any previously leaked webhook.",
-  "pub_date": "2026-09-08T16:32:48.145Z",
+  "pub_date": "2026-10-01T00:16:56.861Z",
   "platforms": {
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUcFFTdnZCWmFOVVNXbWwxZE1Lbm5MaVJNVHg0MFM1RnE2OEZGamtKbEYwTituZVkyemt1OVN2OEY5d2FXVEhHQlhnL0g5c3A2SU5WNGdxYUpWVnVvMXpDb1p6MmN4QkFBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg4ODg1MTY3CWZpbGU6UkFHRSBGaWxlIFNjYW5uZXJfMS4wLjVfeDY0LXNldHVwLmV4ZQprRDZ0bkd4aHNxdDJRL3RMRGNuUWk5dVdrV3RnQVZoVnJ3WjhYUTdxV20ydHJxNWxlbnoxbm9sUDhlcXh5RVdUWnNTU3V5WVh2Y0tiR3JRRllOMjBCUT09Cg==",
-      "url": "https://github.com/aftlah/rage-fivem-fileChecker/releases/download/v1.0.5/RAGE.File.Scanner_1.0.5_x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUcFFTdnZCWmFOVVNzeWo0bytUWVM2NWxaV0YvQWtVWDRRZlZNQ0Y1blN5WUFZN1B4elF3WGFqMnRyclAwQjVuZmFJQzR1VDVWRmJpL2tZd0JMWjcyK0F2K2ZzMzUrc1FrPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwODEzODE2CWZpbGU6UkFHRSBGaWxlIFNjYW5uZXJfMS4wLjVfeDY0LXNldHVwLmV4ZQpueXkxNzdLTHFFT0hCUFhKN2U4T0xOc2hHRy9wc1Y4YitTNGxvWmsvTlFKQnBRZ1BjaWlGUzFGZXl5RU5iZGNHdnF2ODZwUEdmWllrNmFVc25BZ3hBdz09Cg==",
+      "url": "https://github.com/aftlah/rage-fivem-fileChecker/releases/download/rage-v1.0.5/RAGE.File.Scanner_1.0.5_x64-setup.exe"
     }
   }
 }
