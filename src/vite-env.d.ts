@@ -3,6 +3,7 @@
 declare const __TENANT__: {
   id: string;
   productName: string;
+  version: string;
   tagline: string;
   /** Rule ids enabled for this tenant, or null for all rules. */
   rules: string[] | null;

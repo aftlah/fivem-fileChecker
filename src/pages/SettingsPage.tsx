@@ -166,7 +166,7 @@ export function SettingsPage(): ReactElement {
           <div className="flex items-center justify-between gap-3">
             <div>
               <p className="text-sm font-medium">Current version</p>
-              <p className="text-sm text-muted-foreground">1.0.5</p>
+              <p className="text-sm text-muted-foreground">{tenant.version}</p>
             </div>
             <Button
               type="button"
@@ -189,7 +189,7 @@ export function SettingsPage(): ReactElement {
         </CardHeader>
         <CardContent className="space-y-2 text-sm">
           <Info label="Application" value={tenant.productName} />
-          <Info label="Version" value="1.0.5" />
+          <Info label="Version" value={tenant.version} />
           <Info label="Developer" value="Aftlah" />
           <Info label="Mode" value="Read-only filesystem scanner" />
         </CardContent>

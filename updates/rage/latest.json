@@ -1,11 +1,11 @@
 {
-  "version": "1.0.5",
-  "notes": "Moved Discord webhook out of the public repo into a build-time secret. Rotate any previously leaked webhook.",
-  "pub_date": "2026-10-01T00:16:56.861Z",
+  "version": "1.0.6",
+  "notes": "Now available for multiple companies (RAGE and BBC), each with its own logo, colors, and Discord channel.\nFixed the app freezing (\"Not Responding\") while a scan is running.",
+  "pub_date": "2026-10-01T00:36:33.218Z",
   "platforms": {
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUcFFTdnZCWmFOVVNzeWo0bytUWVM2NWxaV0YvQWtVWDRRZlZNQ0Y1blN5WUFZN1B4elF3WGFqMnRyclAwQjVuZmFJQzR1VDVWRmJpL2tZd0JMWjcyK0F2K2ZzMzUrc1FrPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwODEzODE2CWZpbGU6UkFHRSBGaWxlIFNjYW5uZXJfMS4wLjVfeDY0LXNldHVwLmV4ZQpueXkxNzdLTHFFT0hCUFhKN2U4T0xOc2hHRy9wc1Y4YitTNGxvWmsvTlFKQnBRZ1BjaWlGUzFGZXl5RU5iZGNHdnF2ODZwUEdmWllrNmFVc25BZ3hBdz09Cg==",
-      "url": "https://github.com/aftlah/rage-fivem-fileChecker/releases/download/rage-v1.0.5/RAGE.File.Scanner_1.0.5_x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUcFFTdnZCWmFOVVlYT3lEb2hRR1hNc2MxVFRPZ3FvSWRaOStnQUQ4OExrclBuTlUwMGxGellYYThCWUtEb0V1Tnd3aGNZbi9DWm55M3hHc3UxSlAySE95STNuekNLU2dvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwODE0OTkyCWZpbGU6UkFHRSBGaWxlIFNjYW5uZXJfMS4wLjZfeDY0LXNldHVwLmV4ZQo5YnhvQm9KYUwwODZpUlpORTJzcHBFWUV5VU9PNWsxN2toSmJIcWU0TURpQjFOekVITlhJK0U4akp2WnBEOFFxS1dQbHByTnhRVXVKL2RIbkM4bXBBdz09Cg==",
+      "url": "https://github.com/aftlah/fivem-fileChecker/releases/download/v1.0.6/RAGE.File.Scanner_1.0.6_x64-setup.exe"
     }
   }
 }

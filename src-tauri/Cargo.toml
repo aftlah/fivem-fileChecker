@@ -1,6 +1,6 @@
 [package]
 name = "rage-file-checker"
-version = "1.0.5"
+version = "1.0.6"
 description = "Read-only scanner for FiveM installation files and folders"
 authors = ["Aftlah"]
 edition = "2021"

@@ -14,6 +14,9 @@ if (!fs.existsSync(tenantPath)) {
   throw new Error(`Unknown tenant "${tenantId}" (missing ${tenantPath})`);
 }
 const tenant = JSON.parse(fs.readFileSync(tenantPath, "utf8"));
+const appVersion: string = JSON.parse(
+  fs.readFileSync(path.join(projectRoot, "package.json"), "utf8"),
+).version;
 
 // Optional in-app logo: path (relative to tenants/<id>/) from tenant.json "logo", default logo.png.
 const logoPath = path.join(projectRoot, "tenants", tenantId, tenant.logo ?? "logo.png");
@@ -34,6 +37,7 @@ export default defineConfig({
     __TENANT__: JSON.stringify({
       id: tenant.id,
       productName: tenant.productName,
+      version: appVersion,
       tagline: tenant.tagline,
       rules: tenant.rules ?? null,
     }),

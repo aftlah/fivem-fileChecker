@@ -60,7 +60,7 @@ export function AppLayout({
           })}
         </nav>
 
-        <div className="px-5 py-4 text-xs text-muted-foreground">Version 1.0.5</div>
+        <div className="px-5 py-4 text-xs text-muted-foreground">Version {tenant.version}</div>
       </aside>
 
       <main className="min-w-0 flex-1 overflow-y-auto">

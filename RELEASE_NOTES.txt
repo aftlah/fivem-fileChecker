@@ -1,1 +1,2 @@
-Moved Discord webhook out of the public repo into a build-time secret. Rotate any previously leaked webhook.
+Now available for multiple companies (RAGE and BBC), each with its own logo, colors, and Discord channel.
+Fixed the app freezing ("Not Responding") while a scan is running.

@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 export const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
-const REPO = "aftlah/rage-fivem-fileChecker";
+const REPO = "aftlah/fivem-fileChecker";
 
 export function loadEnvFile(filePath) {
   if (!fs.existsSync(filePath)) return;
@@ -43,7 +43,8 @@ export function loadTenant(id) {
 }
 
 export function releaseTag(tenant, version) {
-  return `${tenant.id}-v${version}`;
+  // One GitHub release per version holds the installers of every tenant.
+  return `v${version}`;
 }
 
 export function updaterEndpoint(tenant) {
