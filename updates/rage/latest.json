@@ -1,11 +1,11 @@
 {
-  "version": "1.0.6",
-  "notes": "Now available for multiple companies (RAGE and BBC), each with its own logo, colors, and Discord channel.\nFixed the app freezing (\"Not Responding\") while a scan is running.",
-  "pub_date": "2026-10-01T00:36:33.218Z",
+  "version": "1.0.7",
+  "notes": "Updated the Discord reporting channel for BBC.",
+  "pub_date": "2026-10-01T09:34:35.047Z",
   "platforms": {
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUcFFTdnZCWmFOVVlYT3lEb2hRR1hNc2MxVFRPZ3FvSWRaOStnQUQ4OExrclBuTlUwMGxGellYYThCWUtEb0V1Tnd3aGNZbi9DWm55M3hHc3UxSlAySE95STNuekNLU2dvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwODE0OTkyCWZpbGU6UkFHRSBGaWxlIFNjYW5uZXJfMS4wLjZfeDY0LXNldHVwLmV4ZQo5YnhvQm9KYUwwODZpUlpORTJzcHBFWUV5VU9PNWsxN2toSmJIcWU0TURpQjFOekVITlhJK0U4akp2WnBEOFFxS1dQbHByTnhRVXVKL2RIbkM4bXBBdz09Cg==",
-      "url": "https://github.com/aftlah/fivem-fileChecker/releases/download/v1.0.6/RAGE.File.Scanner_1.0.6_x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUcFFTdnZCWmFOVWNOcDZOb2xMYXdoNVRLN3hoRVZHQVlhaU9YcUxoUGxzS21xcmgvWWpzVUVDbXpRN3J3ZWV2U25TdGJwbjlEbTk1M29pUGp2OWFvNmtmSDJDTi90YVFvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwODQ3Mjc0CWZpbGU6UkFHRSBGaWxlIFNjYW5uZXJfMS4wLjdfeDY0LXNldHVwLmV4ZQovVEZiQ0JNNXJhcnJab2h1WncwVDROVEF5bE1aMXAzVThsUG0vYXNhc3FPNFdGT0E5U1pWV2VlMU5mTjhKYnNiVnFEcWIyVXZWU1R0ckkxUkdIVXNEUT09Cg==",
+      "url": "https://github.com/aftlah/fivem-fileChecker/releases/download/v1.0.7/RAGE.File.Scanner_1.0.7_x64-setup.exe"
     }
   }
 }
