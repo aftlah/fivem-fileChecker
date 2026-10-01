@@ -43,14 +43,30 @@ pub fn detect_fivem_path() -> Result<Option<String>, String> {
 }
 
 #[tauri::command]
-pub fn inspect_path(path: String, rule: ScanRuleInput) -> Result<ScanResultDto, String> {
-    let base = PathBuf::from(path.trim());
-    ensure_directory(&base)?;
-    Ok(inspect_rule(&base, &rule))
+pub async fn inspect_path(path: String, rule: ScanRuleInput) -> Result<ScanResultDto, String> {
+    tauri::async_runtime::spawn_blocking(move || {
+        let base = PathBuf::from(path.trim());
+        ensure_directory(&base)?;
+        Ok(inspect_rule(&base, &rule))
+    })
+    .await
+    .map_err(|error| error.to_string())?
 }
 
+// Async + spawn_blocking: sync commands run on the main thread and would freeze the window
+// ("Not Responding") while the whole FiveM folder is walked.
 #[tauri::command]
-pub fn scan_fivem(
+pub async fn scan_fivem(
+    app: AppHandle,
+    path: String,
+    rules: Vec<ScanRuleInput>,
+) -> Result<Vec<ScanResultDto>, String> {
+    tauri::async_runtime::spawn_blocking(move || run_scan(app, path, rules))
+        .await
+        .map_err(|error| error.to_string())?
+}
+
+fn run_scan(
     app: AppHandle,
     path: String,
     rules: Vec<ScanRuleInput>,

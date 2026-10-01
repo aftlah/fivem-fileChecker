@@ -77,9 +77,9 @@ pub fn send_scan_report(report: DiscordReport) -> Result<(), String> {
     let scanned_at = scan_time_wib();
 
     let payload = json!({
-        "username": "RAGE File Scanner",
+        "username": crate::APP_NAME,
         "embeds": [{
-            "author": { "name": "RAGE File Scanner" },
+            "author": { "name": crate::APP_NAME },
             "title": title,
             "description": description,
             "color": color,

@@ -1,0 +1,21 @@
+{
+  "id": "rage",
+  "productName": "RAGE File Scanner",
+  "identifier": "com.altaf.rage-file-checker",
+  "logo": "logo_rage.png",
+  "tagline": "Scanner for FiveM",
+  "shortDescription": "Read-only scanner for FiveM files",
+  "icons": [
+    "../tenants/rage/icons/32x32.png",
+    "../tenants/rage/icons/128x128.png",
+    "../tenants/rage/icons/128x128@2x.png",
+    "../tenants/rage/icons/icon.icns",
+    "../tenants/rage/icons/icon.ico"
+  ],
+  "devPort": 1420,
+  "rules": null,
+  "theme": {
+    "light": { "primary": "#ca8a04", "primaryForeground": "#18181b" },
+    "dark": { "primary": "#eab308", "primaryForeground": "#18181b" }
+  }
+}

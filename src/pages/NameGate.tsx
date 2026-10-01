@@ -1,10 +1,11 @@
 import { useState, type FormEvent, type ReactElement } from "react";
-import { ScanSearch } from "lucide-react";
+import { TenantLogo } from "@/components/TenantLogo";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useSettings } from "@/hooks/useSettings";
 import { markSetupComplete } from "@/lib/storage";
+import { tenant } from "@/tenant";
 
 export function NameGate(): ReactElement {
   const { setOperatorName } = useSettings();
@@ -23,12 +24,18 @@ export function NameGate(): ReactElement {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-6 text-foreground">
+    <div className="flex min-h-screen items-center justify-center bg-background px-6 py-10 text-foreground">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-muted">
-            <ScanSearch className="h-5 w-5 text-info" />
-          </div>
+          {tenant.logo ? (
+            <img
+              src={tenant.logo}
+              alt={tenant.productName}
+              className="mx-auto mb-2 h-44 w-auto max-w-full object-contain"
+            />
+          ) : (
+            <TenantLogo className="mx-auto mb-2 h-32 w-32" />
+          )}
           <CardTitle>name in character</CardTitle>
           <CardDescription>
             This character name is attached to every scan result sent to Discord. After setup, the

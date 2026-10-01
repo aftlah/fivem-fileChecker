@@ -1,3 +1,4 @@
+import { tenant } from "@/tenant";
 import { useState, type ReactElement } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -187,7 +188,7 @@ export function SettingsPage(): ReactElement {
           <CardTitle>About</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2 text-sm">
-          <Info label="Application" value="RAGE File Scanner" />
+          <Info label="Application" value={tenant.productName} />
           <Info label="Version" value="1.0.5" />
           <Info label="Developer" value="Aftlah" />
           <Info label="Mode" value="Read-only filesystem scanner" />

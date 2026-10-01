@@ -1,3 +1,5 @@
+import { TenantLogo } from "@/components/TenantLogo";
+import { tenant } from "@/tenant";
 import type { ReactElement } from "react";
 import { CheckCircle2, Loader2, Play } from "lucide-react";
 import { PathSelector } from "@/components/dashboard/PathSelector";
@@ -20,12 +22,15 @@ export function DashboardPage(): ReactElement {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">RAGE File Scanner</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Scanning as {settings.operatorName}. The app runs in the background and sends results to
-          Discord automatically when FiveM opens.
-        </p>
+      <div className="flex items-center gap-4">
+        <TenantLogo className="h-14 w-14" />
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight">{tenant.productName}</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Scanning as {settings.operatorName}. The app runs in the background and sends results to
+            Discord automatically when FiveM opens.
+          </p>
+        </div>
       </div>
 
       <PathSelector

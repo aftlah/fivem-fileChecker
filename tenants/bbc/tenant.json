@@ -1,0 +1,21 @@
+{
+  "id": "bbc",
+  "productName": "BBC File Scanner",
+  "identifier": "com.altaf.bbc-file-checker",
+  "logo": "icons/logo_bbc.png",
+  "tagline": "Scanner for FiveM",
+  "shortDescription": "Read-only scanner for FiveM files",
+  "icons": [
+    "../tenants/bbc/icons/32x32.png",
+    "../tenants/bbc/icons/128x128.png",
+    "../tenants/bbc/icons/128x128@2x.png",
+    "../tenants/bbc/icons/icon.icns",
+    "../tenants/bbc/icons/icon.ico"
+  ],
+  "devPort": 1430,
+  "rules": null,
+  "theme": {
+    "light": { "primary": "#dc2626" },
+    "dark": { "primary": "#ef4444" }
+  }
+}

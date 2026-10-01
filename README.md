@@ -49,3 +49,19 @@ Example:
   description: "Checks whether gameconfig.xml exists."
 }
 ```
+
+## Multiple companies (tenants)
+
+One codebase builds a separate app per company. Each tenant lives in `tenants/<id>/tenant.json` (name, bundle identifier, icons, theme colors, optional `rules` list of rule ids).
+
+```bash
+npm run tauri dev -- --tenant=bbc      # dev build for BBC (default tenant: rage)
+npm run release -- --tenant=bbc        # signed installer + updates/bbc/latest.json
+```
+
+Per tenant you need:
+
+- `.discord.<id>.env` with `DISCORD_WEBHOOK_URL` (see `.discord.env.example`)
+- GitHub release tagged `<id>-v<version>` holding the installer; commit `updates/<id>/latest.json` to `main` (the updater reads it from there)
+
+Add a company by copying `tenants/bbc/` to `tenants/<id>/` and editing it. Different identifiers keep installs and local data (history, name) separate.

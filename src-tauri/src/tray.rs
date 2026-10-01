@@ -15,7 +15,7 @@ pub fn setup(app: &App) -> tauri::Result<()> {
 
     TrayIconBuilder::with_id("main-tray")
         .icon(icon.clone())
-        .tooltip("RAGE File Scanner")
+        .tooltip(crate::APP_NAME)
         .menu(&menu)
         .show_menu_on_left_click(false)
         .on_menu_event(|app, event| match event.id().as_ref() {

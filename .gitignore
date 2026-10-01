@@ -27,3 +27,5 @@ src-tauri/keys/updater.key
 *.njsproj
 *.sln
 *.sw?
+.discord.*.env
+src-tauri/tauri.tenant.*.conf.json

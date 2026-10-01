@@ -3,6 +3,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { extractTenantArg, loadEnvFile, loadTenant, prepareTenantBuild } from "./tenant.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const cargoBin = path.join(os.homedir(), ".cargo", "bin");
@@ -13,25 +14,10 @@ if (!pathParts.includes(cargoBin)) {
 
 const keyPath = path.join(root, "src-tauri", "keys", "updater.key");
 const envFile = path.join(root, ".signing.env");
-const discordEnvFile = path.join(root, ".discord.env");
 
-function loadEnvFile(filePath) {
-  if (!fs.existsSync(filePath)) {
-    return;
-  }
-
-  for (const line of fs.readFileSync(filePath, "utf8").split(/\r?\n/)) {
-    const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith("#")) continue;
-    const eq = trimmed.indexOf("=");
-    if (eq === -1) continue;
-    const key = trimmed.slice(0, eq).trim();
-    const value = trimmed.slice(eq + 1).trim();
-    if (key && process.env[key] == null) {
-      process.env[key] = value;
-    }
-  }
-}
+const [tenantId] = extractTenantArg(process.argv.slice(2));
+const tenant = loadTenant(tenantId);
+const tenantConfigPath = prepareTenantBuild(tenant);
 
 if (!fs.existsSync(keyPath)) {
   console.error(`Missing signing key: ${keyPath}`);
@@ -45,7 +31,6 @@ process.env.TAURI_SIGNING_PRIVATE_KEY = fs.readFileSync(keyPath, "utf8");
 process.env.TAURI_SIGNING_PRIVATE_KEY_PATH = keyPath;
 
 loadEnvFile(envFile);
-loadEnvFile(discordEnvFile);
 
 if (!process.env.TAURI_SIGNING_PRIVATE_KEY_PASSWORD) {
   console.error("Set TAURI_SIGNING_PRIVATE_KEY_PASSWORD or create .signing.env with:");
@@ -54,17 +39,18 @@ if (!process.env.TAURI_SIGNING_PRIVATE_KEY_PASSWORD) {
 }
 
 if (!process.env.DISCORD_WEBHOOK_URL?.trim()) {
-  console.error("Missing Discord webhook. Create .discord.env from .discord.env.example:");
+  console.error(`Missing Discord webhook for tenant "${tenant.id}". Create .discord.${tenant.id}.env from .discord.env.example:`);
   console.error("DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/...");
   process.exit(1);
 }
 
+console.log(`Tenant: ${tenant.id} (${tenant.productName})`);
 console.log("Signing with key:", keyPath);
 console.log("Discord webhook: configured (hidden)");
 console.log("Output target:", process.env.CARGO_TARGET_DIR);
 
 const tauriJs = path.join(root, "node_modules", "@tauri-apps", "cli", "tauri.js");
-const child = spawn(process.execPath, [tauriJs, "build"], {
+const child = spawn(process.execPath, [tauriJs, "build", "--config", tenantConfigPath], {
   cwd: root,
   stdio: "inherit",
   env: process.env,
