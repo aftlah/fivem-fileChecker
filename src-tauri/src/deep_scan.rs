@@ -1,9 +1,3 @@
-//! Forced, read-only content check of every file that looks suspicious by type or name.
-//!
-//! Unlike the loose-file check, there is no extension whitelist and the size limit is much
-//! higher: scripts, ASI plugins, archives and anything named like a cheat are opened and
-//! searched byte by byte. A file that cannot be opened is reported too, because blocking
-//! the scanner is itself suspicious.
 
 use aho_corasick::AhoCorasick;
 use std::fs::File;
@@ -13,18 +7,12 @@ use std::path::Path;
 const FULL_READ_LIMIT: u64 = 64 * 1024 * 1024;
 const HALF_READ: u64 = 32 * 1024 * 1024;
 const MAX_REASONS: usize = 8;
-/// Source scripts are normally 4-6 bits of entropy per byte; encrypted or packed payloads
-/// are close to 8.
 const ENTROPY_THRESHOLD: f64 = 7.2;
 const ENTROPY_MIN_BYTES: usize = 2048;
 
-/// Extensions that are opened no matter what they are called.
 const FORCED_EXTENSIONS: [&str; 8] = ["lua", "luac", "js", "asi", "zip", "rar", "7z", "cfg"];
-/// `.dll` files are only opened in folders where mods are normally dropped, so the
-/// legitimate FiveM runtime libraries are not read.
 const DLL_FOLDERS: [&str; 5] = ["plugins", "scripts", "mods", "asi", "bin"];
 
-/// (keyword, label). Matching is ASCII case-insensitive and also runs over binary files.
 const KEYWORDS: [(&str, &str); 19] = [
     ("norecoil", "no recoil"),
     ("no_recoil", "no recoil"),
@@ -47,7 +35,6 @@ const KEYWORDS: [(&str, &str); 19] = [
     ("weaponcomponents.meta", "weapon meta reference"),
 ];
 
-/// File-name fragments that are suspicious on their own (any extension).
 const NAME_KEYWORDS: [&str; 7] = [
     "norecoil",
     "no_recoil",
@@ -147,7 +134,6 @@ pub fn analyze(path: &Path) -> Vec<String> {
     reasons
 }
 
-/// Scripts that hide their code: compiled bytecode, remote loaders and packed payloads.
 fn script_heuristics(extension: &str, data: &[u8]) -> Vec<String> {
     let mut reasons = Vec::new();
     let is_script = matches!(extension, "lua" | "luac" | "js");
@@ -200,7 +186,6 @@ fn shannon_entropy(data: &[u8]) -> f64 {
         .sum()
 }
 
-/// Reads the whole file, or the first and last 32 MB of a very large one.
 fn read_forced(path: &Path) -> Result<Vec<u8>, String> {
     let mut file = File::open(path).map_err(|error| error.to_string())?;
     let len = file.metadata().map_err(|error| error.to_string())?.len();

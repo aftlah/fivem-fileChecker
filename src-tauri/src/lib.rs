@@ -16,7 +16,6 @@ use commands::{
 use process_watch::show_main_window;
 use tauri_plugin_autostart::MacosLauncher;
 
-/// Display name of the tenant this binary was built for (set by build.rs).
 pub const APP_NAME: &str = env!("APP_DISPLAY_NAME");
 
 pub fn is_watch_mode() -> bool {

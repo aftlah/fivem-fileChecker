@@ -33,7 +33,6 @@ pub fn start(app: AppHandle) {
             }
 
             if running && !was_running {
-                // Give the frontend a moment to attach event listeners.
                 std::thread::sleep(Duration::from_millis(1500));
                 let _ = app.emit(
                     "fivem-launched",

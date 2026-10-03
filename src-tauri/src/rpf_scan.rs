@@ -1,9 +1,3 @@
-//! Read-only inspection of RPF7 archives.
-//!
-//! Only the table of contents and small data entries are read; nothing is extracted to disk
-//! and nothing is executed. An archive is reported when it looks like a gameplay-data mod
-//! (no recoil, ped accuracy, weapon/handling edits) or when it hides its contents.
-
 use flate2::read::DeflateDecoder;
 use std::fs::File;
 use std::io::{Cursor, Read, Seek, SeekFrom};
@@ -73,6 +67,23 @@ const SIGNATURES: [Signature; 6] = [
         label: "vehicle model data",
     },
 ];
+
+/// Archives that FiveM and the Rockstar launcher ship themselves. They are not plain RPF7
+/// files (or are encrypted), which would otherwise be reported as disguised or unreadable.
+const OFFICIAL_ARCHIVES: [&str; 2] = [
+    "citizen/streaming_surrogate.rpf",
+    "data/game-storage/launcher/launcher.rpf",
+];
+
+/// True when `relative` is an official archive and the only findings are structural
+/// (invalid or encrypted). Any content finding still gets reported.
+pub fn is_official_archive_noise(relative: &str, reasons: &[String]) -> bool {
+    let relative = relative.replace('\\', "/").to_ascii_lowercase();
+    OFFICIAL_ARCHIVES.contains(&relative.as_str())
+        && reasons.iter().all(|reason| {
+            reason.starts_with("not a valid RPF7") || reason.contains("cannot be inspected")
+        })
+}
 
 pub fn is_rpf_file(path: &Path) -> bool {
     path.extension()
@@ -309,11 +320,8 @@ fn find_bytes(haystack: &[u8], needle: &[u8]) -> Option<usize> {
         .position(|window| window == needle)
 }
 
-/// Player recoil modifiers below this value cancel recoil entirely (the game default is not
-/// negative), so any value under it is treated as a no-recoil edit.
 const RECOIL_HACK_THRESHOLD: f32 = -1.0;
 
-/// Looks for `PLAYER_RECOIL_MODIFIER_MIN/MAX value="..."` with a strongly negative value.
 pub fn find_recoil_hack(data: &[u8]) -> Option<String> {
     for key in ["PLAYER_RECOIL_MODIFIER_MIN", "PLAYER_RECOIL_MODIFIER_MAX"] {
         let Some(position) = find_bytes(data, key.as_bytes()) else {
@@ -347,7 +355,6 @@ pub fn is_loose_data_file(path: &Path) -> bool {
         .unwrap_or(false)
 }
 
-/// Inspects a loose (non-archived) data file. Returns the reasons it looks like a hack.
 pub fn analyze_loose_file(path: &Path) -> Vec<String> {
     let mut reasons = Vec::new();
 
@@ -407,7 +414,6 @@ mod tests {
         data: &'a [u8],
     }
 
-    /// Builds a minimal unencrypted RPF7 with a root directory and the given files.
     fn build_rpf(entries: &[TestEntry]) -> Vec<u8> {
         let mut names = vec![0u8];
         let mut name_offsets = Vec::new();
@@ -619,5 +625,20 @@ mod tests {
             "got {reasons:?}"
         );
         assert!(reasons.iter().any(|r| r == "nested archive textures.rpf"));
+    }
+
+    #[test]
+    fn official_archives_are_ignored_only_when_findings_are_structural() {
+        let invalid = vec!["not a valid RPF7 archive (disguised file?)".to_string()];
+        let encrypted = vec!["RPF with unknown encryption, contents cannot be inspected".to_string()];
+        let cheat = vec!["NO RECOIL: PLAYER_RECOIL_MODIFIER_MIN=-22 in pedaccuracy.meta".to_string()];
+
+        assert!(is_official_archive_noise("citizen/streaming_surrogate.rpf", &invalid));
+        assert!(is_official_archive_noise(
+            "Data/Game-Storage/Launcher/Launcher.rpf",
+            &encrypted
+        ));
+        assert!(!is_official_archive_noise("citizen/streaming_surrogate.rpf", &cheat));
+        assert!(!is_official_archive_noise("mods/clouds.rpf", &invalid));
     }
 }

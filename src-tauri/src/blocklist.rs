@@ -7,16 +7,13 @@ use std::path::Path;
 use std::sync::OnceLock;
 use std::time::Duration;
 
-/// Copy of `updates/blocklist.txt`, used when the online list cannot be downloaded.
 const BUNDLED_BLOCKLIST: &str = include_str!("../blocklist.txt");
-/// Fixed address only; the scanner never downloads from any other URL.
 const REMOTE_BLOCKLIST_URL: &str =
     "https://raw.githubusercontent.com/aftlah/fivem-fileChecker/main/updates/blocklist.txt";
 const REMOTE_TIMEOUT: Duration = Duration::from_secs(5);
 const MAX_REMOTE_BYTES: u64 = 512 * 1024;
 const MAX_HASH_BYTES: u64 = 256 * 1024 * 1024;
 
-/// Online list, fetched at most once per run. `None` means it was unavailable.
 fn remote_blocklist() -> Option<&'static str> {
     static REMOTE: OnceLock<Option<String>> = OnceLock::new();
     REMOTE
@@ -79,7 +76,6 @@ pub fn sha256_hex(path: &Path) -> Option<String> {
     )
 }
 
-/// Returns the label of the known cheat this file is an exact copy of.
 pub fn check_file(path: &Path) -> Option<String> {
     let hash = sha256_hex(path)?;
     lookup(&hash).map(|label| format!("KNOWN CHEAT FILE: {label}"))

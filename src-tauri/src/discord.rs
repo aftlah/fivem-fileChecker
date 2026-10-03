@@ -31,12 +31,10 @@ pub struct DiscordReport {
 }
 
 const FIELD_LIMIT: usize = 1024;
-// Discord embed limits: 25 fields, 6000 characters in total (title/description/footer included).
 const MAX_FIELDS: usize = 25;
 const EMBED_CHAR_BUDGET: usize = 5500;
 
 fn configured_webhook() -> Result<String, String> {
-    // Injected at compile time from DISCORD_WEBHOOK_URL / .discord.env (never from the client).
     match option_env!("DISCORD_WEBHOOK_URL") {
         Some(url) if !url.trim().is_empty() => Ok(url.trim().to_string()),
         _ => Err(
@@ -101,9 +99,6 @@ pub fn send_scan_report(report: DiscordReport) -> Result<(), String> {
     Ok(())
 }
 
-/// A `.meta` rule (e.g. Ped Accuracy) only searches loose files. When an RPF archive that
-/// another check flagged contains that file, the rule is reported as found inside the archive
-/// instead of "not found".
 fn reclassify_archive_hits(report: &DiscordReport) -> DiscordReport {
     let mut adjusted = report.clone();
 
@@ -240,7 +235,6 @@ fn build_fields(report: &DiscordReport, player_name: &str, scanned_at: &str) -> 
     fields
 }
 
-/// Packs one file per line into chunks that each fit a single embed field.
 fn chunk_lines(files: &[String]) -> Vec<String> {
     let mut chunks = Vec::new();
     let mut current = String::new();

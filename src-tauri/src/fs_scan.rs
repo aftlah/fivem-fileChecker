@@ -290,8 +290,6 @@ fn find_named_files(root: &Path, target_name: &str, max: usize) -> Vec<String> {
     files
 }
 
-/// Walks the FiveM folder, runs `analyze` on every candidate file and reports the ones that
-/// came back with at least one reason.
 fn inspect_flagged_files(
     base: &Path,
     rule: &ScanRuleInput,
@@ -316,6 +314,11 @@ fn inspect_flagged_files(
             .strip_prefix(base)
             .map(|path| path.to_string_lossy().replace('\\', "/"))
             .unwrap_or_else(|_| rpf.to_string_lossy().into_owned());
+        if rule.item_type == "rpf-archives"
+            && rpf_scan::is_official_archive_noise(&relative, &reasons)
+        {
+            continue;
+        }
         if first_path.is_none() {
             first_path = Some(rpf.to_string_lossy().into_owned());
         }
