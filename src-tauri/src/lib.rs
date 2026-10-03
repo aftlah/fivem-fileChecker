@@ -1,7 +1,10 @@
+mod blocklist;
 mod commands;
+mod deep_scan;
 mod discord;
 mod fs_scan;
 mod process_watch;
+mod rpf_scan;
 mod tray;
 mod validation;
 

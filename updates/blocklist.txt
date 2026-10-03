@@ -1,0 +1,4 @@
+# Known cheat / no-recoil files. Format: <sha256>  <label>
+# Add a line for every new sample; an exact hash match is always reported.
+ff0ab1db2cb6270feebac6599d98472dad472e164be6e9f2d2996529cab4e759  norecoil-DDW (disguised as q_NVE_Volumetric_Clouds.rpf)
+267a7f7645656994b835630087b60e6ebdbf7b186ef054ea71c4a2c4b77d9f55  sculpture_revival.rpf (no recoil in disguised carcols.meta)

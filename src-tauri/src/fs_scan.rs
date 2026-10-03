@@ -1,3 +1,4 @@
+use crate::{deep_scan, rpf_scan};
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::io::ErrorKind;
@@ -68,6 +69,23 @@ pub fn inspect_rule(base: &Path, rule: &ScanRuleInput) -> ScanResultDto {
 
     if rule.item_type == "file-search" {
         return inspect_named_file_search(base, rule);
+    }
+
+    if rule.item_type == "rpf-archives" {
+        return inspect_flagged_files(base, rule, rpf_scan::is_rpf_file, rpf_scan::analyze_rpf);
+    }
+
+    if rule.item_type == "deep-scan" {
+        return inspect_flagged_files(base, rule, deep_scan::is_candidate, deep_scan::analyze);
+    }
+
+    if rule.item_type == "content-scan" {
+        return inspect_flagged_files(
+            base,
+            rule,
+            rpf_scan::is_loose_data_file,
+            rpf_scan::analyze_loose_file,
+        );
     }
 
     let full_path = match join_relative(base, &rule.relative_path) {
@@ -269,6 +287,89 @@ fn find_named_files(root: &Path, target_name: &str, max: usize) -> Vec<String> {
     }
 
     files.sort();
+    files
+}
+
+/// Walks the FiveM folder, runs `analyze` on every candidate file and reports the ones that
+/// came back with at least one reason.
+fn inspect_flagged_files(
+    base: &Path,
+    rule: &ScanRuleInput,
+    is_candidate: fn(&Path) -> bool,
+    analyze: fn(&Path) -> Vec<String>,
+) -> ScanResultDto {
+    let path_str = base.to_string_lossy().into_owned();
+    let mut found_files = Vec::new();
+    let mut first_path: Option<String> = None;
+
+    for candidate in find_files_where(base, 20000, is_candidate) {
+        if found_files.len() >= 80 {
+            break;
+        }
+        let reasons = analyze(&candidate);
+        if reasons.is_empty() {
+            continue;
+        }
+
+        let rpf = candidate;
+        let relative = rpf
+            .strip_prefix(base)
+            .map(|path| path.to_string_lossy().replace('\\', "/"))
+            .unwrap_or_else(|_| rpf.to_string_lossy().into_owned());
+        if first_path.is_none() {
+            first_path = Some(rpf.to_string_lossy().into_owned());
+        }
+        found_files.push(format!("{relative} ({})", reasons.join("; ")));
+    }
+
+    found_files.sort();
+    let detected = !found_files.is_empty();
+
+    ScanResultDto {
+        rule_id: rule.id.clone(),
+        name: rule.name.clone(),
+        status: if detected { "DETECTED" } else { "NOT_FOUND" }.to_string(),
+        path: first_path.unwrap_or(path_str),
+        relative_path: rule.relative_path.clone(),
+        exists: detected,
+        item_type: rule.item_type.clone(),
+        severity: rule.severity.clone(),
+        modified_at: None,
+        error: None,
+        found_files,
+    }
+}
+
+fn find_files_where(root: &Path, max: usize, matches: fn(&Path) -> bool) -> Vec<PathBuf> {
+    let mut files = Vec::new();
+    let mut stack = vec![root.to_path_buf()];
+
+    while let Some(dir) = stack.pop() {
+        let entries = match fs::read_dir(&dir) {
+            Ok(entries) => entries,
+            Err(_) => continue,
+        };
+
+        for entry in entries.flatten() {
+            if files.len() >= max {
+                return files;
+            }
+
+            let path = entry.path();
+            if path.is_dir() {
+                if is_skipped_dir(&entry.file_name()) {
+                    continue;
+                }
+                stack.push(path);
+                continue;
+            }
+
+            if path.is_file() && matches(&path) {
+                files.push(path);
+            }
+        }
+    }
+
     files
 }
 
@@ -518,7 +619,7 @@ mod tests {
             std::time::SystemTime::now()
                 .duration_since(UNIX_EPOCH)
                 .unwrap()
-                .as_na  nos()
+                .as_nanos()
         ));
         let hidden = dir.join("mods").join("custom");
         fs::create_dir_all(&hidden).unwrap();

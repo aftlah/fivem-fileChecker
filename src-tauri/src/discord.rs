@@ -31,6 +31,9 @@ pub struct DiscordReport {
 }
 
 const FIELD_LIMIT: usize = 1024;
+// Discord embed limits: 25 fields, 6000 characters in total (title/description/footer included).
+const MAX_FIELDS: usize = 25;
+const EMBED_CHAR_BUDGET: usize = 5500;
 
 fn configured_webhook() -> Result<String, String> {
     // Injected at compile time from DISCORD_WEBHOOK_URL / .discord.env (never from the client).
@@ -98,7 +101,55 @@ pub fn send_scan_report(report: DiscordReport) -> Result<(), String> {
     Ok(())
 }
 
+/// A `.meta` rule (e.g. Ped Accuracy) only searches loose files. When an RPF archive that
+/// another check flagged contains that file, the rule is reported as found inside the archive
+/// instead of "not found".
+fn reclassify_archive_hits(report: &DiscordReport) -> DiscordReport {
+    let mut adjusted = report.clone();
+
+    for index in 0..adjusted.results.len() {
+        let target = adjusted.results[index]
+            .relative_path
+            .rsplit(['/', '\\'])
+            .next()
+            .unwrap_or("")
+            .to_lowercase();
+        if adjusted.results[index].status != "NOT_FOUND" || !target.ends_with(".meta") {
+            continue;
+        }
+
+        let hits: Vec<String> = report
+            .results
+            .iter()
+            .filter(|other| other.status != "NOT_FOUND")
+            .flat_map(|other| other.found_files.iter())
+            .filter(|file| file.to_lowercase().contains(&target))
+            .map(|file| {
+                let archive = file.split(" (").next().unwrap_or(file);
+                format!("{archive} (berisi {target})")
+            })
+            .collect();
+
+        if !hits.is_empty() {
+            let item = &mut adjusted.results[index];
+            item.status = "DETECTED".to_string();
+            item.found_files = hits;
+        }
+    }
+
+    let moved = adjusted
+        .results
+        .iter()
+        .zip(&report.results)
+        .filter(|(after, before)| after.status != before.status)
+        .count() as u32;
+    adjusted.detected += moved;
+    adjusted.not_detected = adjusted.not_detected.saturating_sub(moved);
+    adjusted
+}
+
 fn build_fields(report: &DiscordReport, player_name: &str, scanned_at: &str) -> Vec<Value> {
+    let report = &reclassify_archive_hits(report);
     let mut fields = vec![
         field("Nama karakter", player_name, true),
         field("Waktu scan", scanned_at, true),
@@ -118,22 +169,66 @@ fn build_fields(report: &DiscordReport, player_name: &str, scanned_at: &str) -> 
         fields.push(field("Error", &report.errors.to_string(), true));
     }
 
-    let found = format_found_list(report);
-    fields.push(field(
-        if found.is_empty() {
-            "File yang ketemu".to_string()
-        } else {
-            format!("File yang ketemu ({})", report.detected)
-        },
-        if found.is_empty() {
-            "Tidak ada."
-        } else {
-            found.as_str()
-        },
-        false,
-    ));
-
     let clean = format_clean_list(report);
+    let clean_cost = if clean.is_empty() { 0 } else { clean.chars().count() + 40 };
+    let fixed_cost: usize = fields.iter().map(field_size).sum();
+    let mut budget = EMBED_CHAR_BUDGET.saturating_sub(fixed_cost + clean_cost);
+    let mut slots = MAX_FIELDS
+        .saturating_sub(fields.len() + usize::from(!clean.is_empty()) + 1);
+
+    let mut items: Vec<&DiscordResultItem> = report
+        .results
+        .iter()
+        .filter(|item| item.status != "NOT_FOUND")
+        .collect();
+    items.sort_by(|left, right| left.name.cmp(&right.name));
+
+    if items.is_empty() {
+        fields.push(field("File yang ketemu", "Tidak ada.", false));
+    }
+
+    let mut skipped_files = 0usize;
+    for item in items {
+        let total = item.found_files.len();
+        let heading = if item.status == "ERROR" {
+            format!("{} — gagal dibaca", item.name)
+        } else if total == 0 {
+            item.name.clone()
+        } else {
+            format!("{} ({} file)", item.name, total)
+        };
+
+        let chunks = if item.status == "ERROR" || total == 0 {
+            vec!["—".to_string()]
+        } else {
+            chunk_lines(&item.found_files)
+        };
+
+        for (index, chunk) in chunks.iter().enumerate() {
+            let name = if index == 0 {
+                heading.clone()
+            } else {
+                format!("{} (lanjutan)", item.name)
+            };
+            let cost = name.chars().count() + chunk.chars().count();
+            if slots == 0 || cost > budget {
+                skipped_files += chunk.lines().count();
+                continue;
+            }
+            slots -= 1;
+            budget -= cost;
+            fields.push(field(name, chunk, false));
+        }
+    }
+
+    if skipped_files > 0 {
+        fields.push(field(
+            "Tidak muat di Discord",
+            &format!("+{skipped_files} file lain — lihat detail lengkap di aplikasi."),
+            false,
+        ));
+    }
+
     if !clean.is_empty() {
         fields.push(field(
             format!("Tidak ketemu ({})", report.not_detected),
@@ -145,45 +240,32 @@ fn build_fields(report: &DiscordReport, player_name: &str, scanned_at: &str) -> 
     fields
 }
 
-fn format_found_list(report: &DiscordReport) -> String {
-    let mut items: Vec<&DiscordResultItem> = report
-        .results
-        .iter()
-        .filter(|item| item.status != "NOT_FOUND")
-        .collect();
-    items.sort_by(|left, right| left.name.cmp(&right.name));
-
-    if items.is_empty() {
-        return String::new();
+/// Packs one file per line into chunks that each fit a single embed field.
+fn chunk_lines(files: &[String]) -> Vec<String> {
+    let mut chunks = Vec::new();
+    let mut current = String::new();
+    for file in files {
+        let line = truncate(&format!("• {file}"), FIELD_LIMIT);
+        if !current.is_empty() && current.chars().count() + 1 + line.chars().count() > FIELD_LIMIT {
+            chunks.push(std::mem::take(&mut current));
+        }
+        if !current.is_empty() {
+            current.push('\n');
+        }
+        current.push_str(&line);
     }
-
-    let lines: Vec<String> = items
-        .iter()
-        .enumerate()
-        .map(|(index, item)| format_found_line(index + 1, item))
-        .collect();
-
-    truncate(&lines.join("\n"), FIELD_LIMIT)
+    if !current.is_empty() {
+        chunks.push(current);
+    }
+    chunks
 }
 
-fn format_found_line(number: usize, item: &DiscordResultItem) -> String {
-    if item.status == "ERROR" {
-        return format!("`{number}.` {} — gagal dibaca", item.name);
-    }
-
-    if item.found_files.is_empty() {
-        return format!("`{number}.` {}", item.name);
-    }
-
-    let extra = item.found_files.len().saturating_sub(1);
-    if extra == 0 {
-        format!("`{number}.` {} — {}", item.name, item.found_files[0])
-    } else {
-        format!(
-            "`{number}.` {} — {} (+{} file lain)",
-            item.name, item.found_files[0], extra
-        )
-    }
+fn field_size(value: &Value) -> usize {
+    ["name", "value"]
+        .iter()
+        .filter_map(|key| value.get(*key).and_then(Value::as_str))
+        .map(|text| text.chars().count())
+        .sum()
 }
 
 fn format_clean_list(report: &DiscordReport) -> String {
