@@ -1,11 +1,11 @@
 {
-  "version": "1.0.7",
-  "notes": "Updated the Discord reporting channel for BBC.",
-  "pub_date": "2026-10-01T09:36:23.952Z",
+  "version": "1.0.8",
+  "notes": "Discord reports now list every flagged file, and checks found inside RPF archives (e.g. Ped Accuracy) are no longer shown as \"not found\".",
+  "pub_date": "2026-10-03T18:28:08.873Z",
   "platforms": {
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUcFFTdnZCWmFOVWMycTFVbTJNYzZabTJPc0VybnVJK2sxR2xRMHFtUmVRSUIvZnlCam90Q3VlekJBMzBKMjlFY1lyb3Qrd1k1YkFlU0IvTDZSRlBhZDZldnJkRGRjakFjPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwODQ3MzgzCWZpbGU6QkJDIEZpbGUgU2Nhbm5lcl8xLjAuN194NjQtc2V0dXAuZXhlCmtHRnRnY2V1VTY0eG9UUnZIdE56QnYvTTRKOGJYa1I4eHMxU0xXTW5Wb2pEbUplS21qS2VnbTRGNCsvNUNNZ1dnaVd6YXpQY2R3WmMrSWRzaXB3WURRPT0K",
-      "url": "https://github.com/aftlah/fivem-fileChecker/releases/download/v1.0.7/BBC.File.Scanner_1.0.7_x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUcFFTdnZCWmFOVWU2UzR5eWwvYXlwZVlibnFjSG9kNnZsVEYvN0w4ODZRVCtzZWtvekszYVFsalhURi8yd1FnNmpjZnFSbGZnakdFK3R0ajRHWFo3YUpOSXQ0bW1vTlFNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkxMDUyMDgwCWZpbGU6QkJDIEZpbGUgU2Nhbm5lcl8xLjAuOF94NjQtc2V0dXAuZXhlCkJKL3JjNzluV0R3aWF2M3B6L3pBaHUrTHBEV2UrbFJJMEpZT0NhTmJpZHZpbzdSV2ZMWnZYRjBmWFcwRGVlcWlwUkxKL1M5Q1RmcmY3NHFkaEJXS0FRPT0K",
+      "url": "https://github.com/aftlah/fivem-fileChecker/releases/download/v1.0.8/BBC.File.Scanner_1.0.8_x64-setup.exe"
     }
   }
 }
