@@ -92,8 +92,33 @@ pub fn is_rpf_file(path: &Path) -> bool {
         .unwrap_or(false)
 }
 
-/// Returns the reasons an archive looks suspicious, or an empty list when it looks clean.
+/// Findings that only describe how an archive is built (encrypted, odd format, OpenIV
+/// package, nested archives). Plenty of harmless mods look like this, so on their own they
+/// are not evidence of a cheat.
+fn is_structural(reason: &str) -> bool {
+    const MARKERS: [&str; 8] = [
+        "cannot be inspected",
+        "not a valid RPF7",
+        "corrupt RPF",
+        "unreadable archive",
+        "OpenIV package",
+        "package overwrites",
+        "nested archive",
+        "obfuscated entry names",
+    ];
+    MARKERS.iter().any(|marker| reason.contains(marker))
+}
+
+/// Returns the reasons an archive looks suspicious, or an empty list when nothing points to
+/// a cheat. Only content findings count: known cheat hashes, recoil values, gameplay-data
+/// files and data disguised under another name.
 pub fn analyze_rpf(path: &Path) -> Vec<String> {
+    let mut reasons = analyze_rpf_raw(path);
+    reasons.retain(|reason| !is_structural(reason));
+    reasons
+}
+
+fn analyze_rpf_raw(path: &Path) -> Vec<String> {
     let known = crate::blocklist::check_file(path);
 
     let mut reasons = match analyze_inner(path) {
@@ -269,7 +294,12 @@ fn analyze_reader<R: Read + Seek>(
 }
 
 fn push_reason(reasons: &mut Vec<String>, reason: String) {
-    if reasons.len() < MAX_REASONS && !reasons.contains(&reason) {
+    if reasons.contains(&reason) {
+        return;
+    }
+    // Structural notes never use up the room needed for content findings.
+    let content_count = reasons.iter().filter(|r| !is_structural(r)).count();
+    if is_structural(&reason) || content_count < MAX_REASONS {
         reasons.push(reason);
     }
 }
@@ -394,13 +424,6 @@ pub fn analyze_loose_file(path: &Path) -> Vec<String> {
         }
     }
 
-    if name_lower == "assembly.xml"
-        && contains_bytes(&data, b"<package")
-        && contains_bytes(&data, b"target=\"Five\"")
-    {
-        push_reason(&mut reasons, "OpenIV package (assembly.xml)".to_string());
-    }
-
     reasons
 }
 
@@ -484,7 +507,7 @@ mod tests {
             },
         ]);
         let path = write_temp("disguised", &rpf);
-        let reasons = analyze_rpf(&path);
+        let reasons = analyze_rpf_raw(&path);
         let _ = std::fs::remove_file(&path);
 
         assert!(reasons.iter().any(|r| r.contains("OpenIV package")));
@@ -522,13 +545,39 @@ mod tests {
     }
 
     #[test]
+    fn structural_findings_alone_are_not_reported() {
+        let rpf = build_rpf(&[
+            TestEntry {
+                name: "assembly.xml",
+                data: br#"<add source="a">common\datalood.dat</add>"#,
+            },
+            TestEntry {
+                name: "z><;;",
+                data: b"x",
+            },
+        ]);
+        let path = write_temp("structural", &rpf);
+        let raw = analyze_rpf_raw(&path);
+        let reasons = analyze_rpf(&path);
+        let _ = std::fs::remove_file(&path);
+
+        assert!(raw.iter().any(|r| r.contains("OpenIV package")));
+        assert!(reasons.is_empty(), "unexpected reasons: {reasons:?}");
+
+        let path = write_temp("fake-only", b"this is not an rpf at all");
+        let reasons = analyze_rpf(&path);
+        let _ = std::fs::remove_file(&path);
+        assert!(reasons.is_empty(), "unexpected reasons: {reasons:?}");
+    }
+
+    #[test]
     fn flags_obfuscated_entry_names() {
         let rpf = build_rpf(&[TestEntry {
             name: "z><;;",
             data: b"x",
         }]);
         let path = write_temp("obfuscated", &rpf);
-        let reasons = analyze_rpf(&path);
+        let reasons = analyze_rpf_raw(&path);
         let _ = std::fs::remove_file(&path);
 
         assert!(reasons.iter().any(|r| r == "obfuscated entry names"));
@@ -539,12 +588,12 @@ mod tests {
         let mut encrypted = build_rpf(&[]);
         encrypted[12..16].copy_from_slice(&ENC_AES.to_le_bytes());
         let path = write_temp("aes", &encrypted);
-        let reasons = analyze_rpf(&path);
+        let reasons = analyze_rpf_raw(&path);
         let _ = std::fs::remove_file(&path);
         assert!(reasons.iter().any(|r| r.contains("encrypted")));
 
         let path = write_temp("fake", b"this is not an rpf at all");
-        let reasons = analyze_rpf(&path);
+        let reasons = analyze_rpf_raw(&path);
         let _ = std::fs::remove_file(&path);
         assert!(reasons.iter().any(|r| r.contains("not a valid RPF7")));
     }
@@ -617,7 +666,7 @@ mod tests {
             data: &inner,
         }]);
         let path = write_temp("nested", &outer);
-        let reasons = analyze_rpf(&path);
+        let reasons = analyze_rpf_raw(&path);
         let _ = std::fs::remove_file(&path);
 
         assert!(

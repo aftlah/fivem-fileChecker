@@ -1,11 +1,11 @@
 {
-  "version": "1.0.8",
-  "notes": "Discord reports now list every flagged file, and checks found inside RPF archives (e.g. Ped Accuracy) are no longer shown as \"not found\".",
-  "pub_date": "2026-10-03T18:33:00.329Z",
+  "version": "1.0.9",
+  "notes": "Scans now only report RPF archives and scripts that point to a cheat; encrypted/OpenIV/nested archives and the official FiveM SDK scripts are no longer flagged on their own.",
+  "pub_date": "2026-10-04T08:53:46.479Z",
   "platforms": {
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUcFFTdnZCWmFOVWFKWDlacDg3WHRSRzBjYWNFV2pjNW9CY2Z6RmtsSzFNWFFCQTg1ZW9PY1J1WFVqOENNU0s3RmswNEpKREUvR3QvSERFa0R3K2dLZjdmOGJYR29hTVFrPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkxMDUyMzc5CWZpbGU6UkFHRSBGaWxlIFNjYW5uZXJfMS4wLjhfeDY0LXNldHVwLmV4ZQpkOEVIR290Z3BmNW1GQUZwSGZ0YTZJeXRLQitzS1BjNnVrWEQ5RUU5dmpoSDU1ckpwcnJtV0lQNWQxcFpJeDF5dEZXYnErZDQ0Y3BvbUpaakZrQTBEZz09Cg==",
-      "url": "https://github.com/aftlah/fivem-fileChecker/releases/download/v1.0.8/RAGE.File.Scanner_1.0.8_x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUcFFTdnZCWmFOVWYzQlFsZitoWUExdU1GbkhITndpaFRyYm1ETDBrK2VyT0JWQ1B2Y0kzdHN0MXo5REZTMU9vWVRlZjdwbDRLMzlCUWlaNk0vREh3clYxK05ybEFRV0E0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkxMTAzNzQ4CWZpbGU6UkFHRSBGaWxlIFNjYW5uZXJfMS4wLjlfeDY0LXNldHVwLmV4ZQpRVDVrZkNrMFdtb2M4M001cm1ZZkhiUU0xMFpTUDdjTFRRbDNUc1lvNnozU2NnNlNEU2IvSkpYTnE4S1JpTDA1eVNCaGRxOENYdStRRkU1MUpuZkFCUT09Cg==",
+      "url": "https://github.com/aftlah/fivem-fileChecker/releases/download/v1.0.9/RAGE.File.Scanner_1.0.9_x64-setup.exe"
     }
   }
 }

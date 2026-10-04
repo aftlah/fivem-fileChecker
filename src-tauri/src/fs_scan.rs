@@ -450,6 +450,15 @@ fn is_skipped_dir(name: &std::ffi::OsStr) -> bool {
         .any(|skip| name.eq_ignore_ascii_case(skip))
 }
 
+/// FiveM ships the FxDK (citizen/sdk) with hundreds of its own .js/.lua files.
+fn is_official_script_dir(root: &Path, dir: &Path) -> bool {
+    dir.strip_prefix(root)
+        .map(|relative| {
+            relative.to_string_lossy().replace('\\', "/").eq_ignore_ascii_case("citizen/sdk")
+        })
+        .unwrap_or(false)
+}
+
 fn is_script_file(path: &Path) -> bool {
     path.extension()
         .and_then(|ext| ext.to_str())
@@ -480,7 +489,7 @@ fn find_extra_scripts(root: &Path, max: usize) -> Vec<String> {
 
             let path = entry.path();
             if path.is_dir() {
-                if is_skipped_dir(&entry.file_name()) {
+                if is_skipped_dir(&entry.file_name()) || is_official_script_dir(root, &path) {
                     continue;
                 }
                 stack.push(path);

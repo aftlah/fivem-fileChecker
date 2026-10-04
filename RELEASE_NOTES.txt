@@ -1,1 +1,1 @@
-Discord reports now list every flagged file, and checks found inside RPF archives (e.g. Ped Accuracy) are no longer shown as "not found".
+Scans now only report RPF archives and scripts that point to a cheat; encrypted/OpenIV/nested archives and the official FiveM SDK scripts are no longer flagged on their own.
