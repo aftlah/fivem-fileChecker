@@ -29,3 +29,4 @@ src-tauri/keys/updater.key
 *.sw?
 .discord.*.env
 src-tauri/tauri.tenant.*.conf.json
+release-assets

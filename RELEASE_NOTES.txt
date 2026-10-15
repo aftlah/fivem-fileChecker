@@ -1,1 +1,1 @@
-Scans now only report RPF archives and scripts that point to a cheat; encrypted/OpenIV/nested archives and the official FiveM SDK scripts are no longer flagged on their own.
+Added the DTF File Scanner. All File Scanner apps (RAGE, BBC, DTF) are now released together at the same version.

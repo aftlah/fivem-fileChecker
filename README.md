@@ -57,11 +57,12 @@ One codebase builds a separate app per company. Each tenant lives in `tenants/<i
 ```bash
 npm run tauri dev -- --tenant=bbc      # dev build for BBC (default tenant: rage)
 npm run release -- --tenant=bbc        # signed installer + updates/bbc/latest.json
+npm run release:all                    # every tenant at the same version, files gathered in release-assets/v<version>/
 ```
 
 Per tenant you need:
 
 - `.discord.<id>.env` with `DISCORD_WEBHOOK_URL` (see `.discord.env.example`)
-- GitHub release tagged `<id>-v<version>` holding the installer; commit `updates/<id>/latest.json` to `main` (the updater reads it from there)
+- One GitHub release tagged `v<version>` holding the installers of every tenant (plus RAGE's `latest.json`, for apps that still read it from the latest release); commit `updates/<id>/latest.json` to `main` (the updater reads it from there)
 
 Add a company by copying `tenants/bbc/` to `tenants/<id>/` and editing it. Different identifiers keep installs and local data (history, name) separate.

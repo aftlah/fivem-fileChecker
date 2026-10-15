@@ -1,11 +1,11 @@
 {
-  "version": "1.0.9",
-  "notes": "Scans now only report RPF archives and scripts that point to a cheat; encrypted/OpenIV/nested archives and the official FiveM SDK scripts are no longer flagged on their own.",
-  "pub_date": "2026-10-04T08:55:30.781Z",
+  "version": "1.1.0",
+  "notes": "Added the DTF File Scanner. All File Scanner apps (RAGE, BBC, DTF) are now released together at the same version.",
+  "pub_date": "2026-10-15T11:51:55.315Z",
   "platforms": {
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUcFFTdnZCWmFOVWVNVDdNa0t5Z05hanV5SGxWWG90TmRkMEdaLys1VUxrekNmcEhNOG5tamRJSXNmb1NUNkVGcStZYTBOMTBEdmZnOURaUG9nOEtzTS9MUkNSbU54OVE0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkxMTA0MTAxCWZpbGU6QkJDIEZpbGUgU2Nhbm5lcl8xLjAuOV94NjQtc2V0dXAuZXhlCkllRExrUi8xNXV2ZkE2NXVlVW8xeXBJcFA4Vm1IRmdOMnJFdnArYmpqS2ZUY1hpbkJxUS9XY0ZCOW1LWDBmVHZkWTBtWXAvdmo5dG83VWhpYTJZRkNBPT0K",
-      "url": "https://github.com/aftlah/fivem-fileChecker/releases/download/v1.0.9/BBC.File.Scanner_1.0.9_x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUcFFTdnZCWmFOVWF5eDJESnlmMS81UEJlVFF6UFo5bER2WnBpTUYwdDMzSW5aZlU1cU1WQkpOdWN0RitEdWhXaUgxalR4Vm5qOC8zWmd3SFJvcVZKbTdQWmNVeUtFeGdvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkyMDY1MTE0CWZpbGU6QkJDIEZpbGUgU2Nhbm5lcl8xLjEuMF94NjQtc2V0dXAuZXhlCi90dkRQUDFiK242QXBvcXVmWDNQZk9CdVVtUWlHSWM0RlNxaUpxMEdTeDNWS1RNWlhzOUMwQ0k4NGozM1pKUmVqa3pkOHhudjI5cGxoaXZ1eWFIN0FRPT0K",
+      "url": "https://github.com/aftlah/fivem-fileChecker/releases/download/v1.1.0/BBC.File.Scanner_1.1.0_x64-setup.exe"
     }
   }
 }
