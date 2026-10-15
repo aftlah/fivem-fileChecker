@@ -1,0 +1,21 @@
+{
+  "id": "dtf",
+  "productName": "DTF File Scanner",
+  "identifier": "com.altaf.dtf-file-checker",
+  "logo": "logo_dtf.png",
+  "tagline": "Scanner for FiveM",
+  "shortDescription": "Read-only scanner for FiveM files",
+  "icons": [
+    "../tenants/dtf/icons/32x32.png",
+    "../tenants/dtf/icons/128x128.png",
+    "../tenants/dtf/icons/128x128@2x.png",
+    "../tenants/dtf/icons/icon.icns",
+    "../tenants/dtf/icons/icon.ico"
+  ],
+  "devPort": 1440,
+  "rules": null,
+  "theme": {
+    "light": { "primary": "#ea580c", "primaryForeground": "#18181b" },
+    "dark": { "primary": "#f97316", "primaryForeground": "#18181b" }
+  }
+}

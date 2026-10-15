@@ -1,0 +1,11 @@
+{
+  "version": "1.0.9",
+  "notes": "Scans now only report RPF archives and scripts that point to a cheat; encrypted/OpenIV/nested archives and the official FiveM SDK scripts are no longer flagged on their own.",
+  "pub_date": "2026-10-15T08:35:37.013Z",
+  "platforms": {
+    "windows-x86_64": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUcFFTdnZCWmFOVWZkTWdtVkFLNTJCOUJQOHRrdTVMb3RtVS94bzgwU09VZ1hOUTVxanFpSEQ0YWhxYWFkczhueFVyTEpuTWs5Mmx0QlU4WFdTRlJ3VE5GcnRpTkIyYndnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkyMDUzMzIyCWZpbGU6RFRGIEZpbGUgU2Nhbm5lcl8xLjAuOV94NjQtc2V0dXAuZXhlCkh5cVUyZTlKRUtxYWVPcXFiQ3dhVDFIZTJFTDB5a2NtQWVCVWc4YjVZUktiZyt0MnFkTzVDNmk3TndBOVFIQ216YXBFTjdsMFRXWFJRM01rT2pYZUJRPT0K",
+      "url": "https://github.com/aftlah/fivem-fileChecker/releases/download/v1.0.9/DTF.File.Scanner_1.0.9_x64-setup.exe"
+    }
+  }
+}
