@@ -1,11 +1,11 @@
 {
-  "version": "1.1.0",
-  "notes": "Added the DTF File Scanner. All File Scanner apps (RAGE, BBC, DTF) are now released together at the same version.",
-  "pub_date": "2026-10-15T11:53:41.577Z",
+  "version": "1.1.1",
+  "notes": "Scans no longer flag the scripts FiveM downloads itself into data/nui-storage (text-to-speech engine).",
+  "pub_date": "2026-10-23T06:24:27.572Z",
   "platforms": {
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUcFFTdnZCWmFOVWJwWVZMeWtiK2JDYXhwSUFnUmxLMXRuMURsS1BMV0pwdXdURmZJQThudHE3aERrZzdncVVZU0NncnVVQ2JQcENzQ214WCt1MkswK3VnQVIxdUxIVXdNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkyMDY1MjIxCWZpbGU6UkFHRSBGaWxlIFNjYW5uZXJfMS4xLjBfeDY0LXNldHVwLmV4ZQp0UkNQcHVUN05CczV5dndOZUs4L1hNYVNtbW45d29LejZ3OC9lUnY4RG9ZNzc3aHZyNUJ0bHFiOWozckc5THF3QzZHWXllQVgrMyszTC9lampmQThCUT09Cg==",
-      "url": "https://github.com/aftlah/fivem-fileChecker/releases/download/v1.1.0/RAGE.File.Scanner_1.1.0_x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUcFFTdnZCWmFOVVhrR01PMS9acWF4VmZZUnIrZWRvR2ttR2pFSXVkdnNYMEtOWWQ5M3JZWFdMWjFOYTNONGhsZkZuMEwvVG82QldmN3prbHduSnQrM2Mrb2JTTUc4R2dNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkyNzM2NjY3CWZpbGU6UkFHRSBGaWxlIFNjYW5uZXJfMS4xLjFfeDY0LXNldHVwLmV4ZQo3K3p1Ulp1TE1QVWlFK1J3ajNOYmUya0NDTEFIQzAxbDgyYTR2TmtnU0xPbkVHNlIvbHJKNWdVUHNWcnRWWlVxSnl2ODVYRVNJVW1xZHlES1hQamlDQT09Cg==",
+      "url": "https://github.com/aftlah/fivem-fileChecker/releases/download/v1.1.1/RAGE.File.Scanner_1.1.1_x64-setup.exe"
     }
   }
 }

@@ -1,1 +1,1 @@
-Added the DTF File Scanner. All File Scanner apps (RAGE, BBC, DTF) are now released together at the same version.
+Scans no longer flag the scripts FiveM downloads itself into data/nui-storage (text-to-speech engine).
