@@ -450,11 +450,17 @@ fn is_skipped_dir(name: &std::ffi::OsStr) -> bool {
         .any(|skip| name.eq_ignore_ascii_case(skip))
 }
 
-/// FiveM ships the FxDK (citizen/sdk) with hundreds of its own .js/.lua files.
+/// Folders FiveM fills with its own scripts: the FxDK (citizen/sdk) and the browser
+/// components CEF downloads into data/nui-storage (e.g. WasmTtsEngine).
+const OFFICIAL_SCRIPT_DIRS: [&str; 2] = ["citizen/sdk", "data/nui-storage"];
+
 fn is_official_script_dir(root: &Path, dir: &Path) -> bool {
     dir.strip_prefix(root)
         .map(|relative| {
-            relative.to_string_lossy().replace('\\', "/").eq_ignore_ascii_case("citizen/sdk")
+            let relative = relative.to_string_lossy().replace('\\', "/");
+            OFFICIAL_SCRIPT_DIRS
+                .iter()
+                .any(|official| relative.eq_ignore_ascii_case(official))
         })
         .unwrap_or(false)
 }
@@ -653,6 +659,25 @@ mod tests {
             .found_files
             .iter()
             .any(|file| file == "mods/custom/pedaccuracy.meta"));
+    }
+
+    #[test]
+    fn extra_scripts_ignore_fivem_sdk_and_nui_storage() {
+        let dir = std::env::temp_dir().join(format!("rage-official-{}", std::process::id()));
+        let sdk = dir.join("citizen").join("sdk").join("shell");
+        let nui = dir.join("data").join("nui-storage").join("WasmTtsEngine").join("1");
+        let other = dir.join("data").join("cache");
+        fs::create_dir_all(&sdk).unwrap();
+        fs::create_dir_all(&nui).unwrap();
+        fs::create_dir_all(&other).unwrap();
+        fs::write(sdk.join("index.js"), b"js").unwrap();
+        fs::write(nui.join("bindings_main.js"), b"js").unwrap();
+        fs::write(dir.join("data").join("loader.lua"), b"lua").unwrap();
+
+        let files = find_extra_scripts(&dir, 80);
+        let _ = fs::remove_dir_all(&dir);
+
+        assert_eq!(files, vec!["data/loader.lua".to_string()]);
     }
 
     #[test]
