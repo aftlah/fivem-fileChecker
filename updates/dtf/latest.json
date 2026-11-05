@@ -1,11 +1,11 @@
 {
-  "version": "1.1.1",
-  "notes": "Scans no longer flag the scripts FiveM downloads itself into data/nui-storage (text-to-speech engine).",
-  "pub_date": "2026-10-23T06:23:40.100Z",
+  "version": "1.1.2",
+  "notes": "Scans now detect modified player tuning files (playerinfo.ymt) such as near-infinite sprint stamina, no vehicle collision damage and unlimited swimming, even inside renamed or nested RPF archives.",
+  "pub_date": "2026-11-05T12:57:36.148Z",
   "platforms": {
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUcFFTdnZCWmFOVVNLRDkzNXdEazYweE1MdkgrMXBFVlBjMVdicXRmTWpHeTRSTURzZzhTQlozZTBOTWRCb0NWMmhnSVREZ1VvL0RQaXlCVkxYdnAzaVRiZ29YRjhLb2dVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkyNzM2NjE5CWZpbGU6RFRGIEZpbGUgU2Nhbm5lcl8xLjEuMV94NjQtc2V0dXAuZXhlCktnUTlXcFBWZGdsOWVzciswajA4SFlIMmVsNHhKVkFmdlJvbW05MTNjZVk4akw1OHZkRkw1dzVVRGNvTTNtK2M5VktTYlhyQXJsaVhmNEVmQktsUERRPT0K",
-      "url": "https://github.com/aftlah/fivem-fileChecker/releases/download/v1.1.1/DTF.File.Scanner_1.1.1_x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUcFFTdnZCWmFOVVdUZTZiK1Nodll2M2gxZWhscDgyZVlVamtHMnlQK2tVNWZoK2FOZnBOVEhBczRSZTZpYS9OSy9Ick14UCtEL3g2c1F2YTcvSHlFcVZzSCtUL2orWndnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkzODgzNDU1CWZpbGU6RFRGIEZpbGUgU2Nhbm5lcl8xLjEuMl94NjQtc2V0dXAuZXhlClRQczVHM0E5NWY1bjJ3YUFIM0NXZnoyNlpjL2hGcVRMcDNyMldPVlBjaThVWVlzcXp3b1RxeXM5dis5bitUV3FCQW5FaDdMR2xXNjJCMHVLVTU1TEFnPT0K",
+      "url": "https://github.com/aftlah/fivem-fileChecker/releases/download/v1.1.2/DTF.File.Scanner_1.1.2_x64-setup.exe"
     }
   }
 }
