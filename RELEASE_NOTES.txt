@@ -1,1 +1,1 @@
-Scans no longer flag the scripts FiveM downloads itself into data/nui-storage (text-to-speech engine).
+Scans now detect modified player tuning files (playerinfo.ymt) such as near-infinite sprint stamina, no vehicle collision damage and unlimited swimming, even inside renamed or nested RPF archives.
