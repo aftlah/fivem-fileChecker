@@ -271,6 +271,13 @@ fn analyze_reader<R: Read + Seek>(
             }
         }
 
+        if let Some(tuning) = find_player_tuning_hack(&data) {
+            let reason = format!("PLAYER TUNING HACK: {tuning} in {name_lower}");
+            if !reasons.contains(&reason) {
+                reasons.insert(0, reason);
+            }
+        }
+
         for signature in &SIGNATURES {
             if !contains_bytes(&data, signature.needle) {
                 continue;
@@ -375,6 +382,46 @@ pub fn find_recoil_hack(data: &[u8]) -> Option<String> {
     None
 }
 
+const STAMINA_HACK_THRESHOLD: f32 = 10.0;
+const SWIM_HACK_THRESHOLD: f32 = 1000.0;
+
+fn read_tuning_value(data: &[u8], key: &str) -> Option<f32> {
+    let marker = format!("<{key} ");
+    let position = find_bytes(data, marker.as_bytes())?;
+    let start = position + marker.len();
+    let tail = String::from_utf8_lossy(&data[start..data.len().min(start + 64)]).into_owned();
+    let raw = &tail[tail.find("value=\"")? + 7..];
+    raw[..raw.find('"')?].trim().parse::<f32>().ok()
+}
+
+/// Flags a playerinfo.ymt tuned for god-mode style advantages: near-infinite sprint stamina,
+/// no vehicle collision damage, or unlimited swimming outside the world limits.
+pub fn find_player_tuning_hack(data: &[u8]) -> Option<String> {
+    if !contains_bytes(data, b"CPlayerInfo__Tunables") {
+        return None;
+    }
+
+    let mut findings: Vec<String> = Vec::new();
+    for key in ["SprintReplenishRateMultiplier", "SprintReplenishRateMultiplierBike"] {
+        if let Some(value) = read_tuning_value(data, key).filter(|v| *v > STAMINA_HACK_THRESHOLD) {
+            findings.push(format!("{key}={value}"));
+        }
+    }
+    if let Some(value) = read_tuning_value(data, "MaxTimeToTrespassWhileSwimmingBeforeDeath")
+        .filter(|v| *v > SWIM_HACK_THRESHOLD)
+    {
+        findings.push(format!("MaxTimeToTrespassWhileSwimmingBeforeDeath={value}"));
+    }
+    let collision = ["MinVehicleCollisionDamageScale", "MaxVehicleCollisionDamageScale"]
+        .map(|key| read_tuning_value(data, key));
+    if collision.iter().all(|value| *value == Some(0.0)) {
+        findings.push("VehicleCollisionDamageScale=0".to_string());
+    }
+
+    // A single odd value can be a legitimate tweak; two or more is a god-mode tune.
+    (findings.len() >= 2).then(|| findings.join(", "))
+}
+
 const LOOSE_EXTENSIONS: [&str; 6] = ["meta", "xml", "dat", "ymt", "txt", "cfg"];
 const MAX_LOOSE_BYTES: u64 = 2 * 1024 * 1024;
 
@@ -413,6 +460,10 @@ pub fn analyze_loose_file(path: &Path) -> Vec<String> {
 
     if let Some(recoil) = find_recoil_hack(&data) {
         reasons.push(format!("NO RECOIL: {recoil}"));
+    }
+
+    if let Some(tuning) = find_player_tuning_hack(&data) {
+        reasons.push(format!("PLAYER TUNING HACK: {tuning}"));
     }
 
     for signature in &SIGNATURES {
@@ -689,5 +740,44 @@ mod tests {
         ));
         assert!(!is_official_archive_noise("citizen/streaming_surrogate.rpf", &cheat));
         assert!(!is_official_archive_noise("mods/clouds.rpf", &invalid));
+    }
+
+    #[test]
+    fn flags_player_tuning_hack_in_ymt() {
+        let ymt = b"<Item type=\"CPlayerInfo__Tunables\">
+<MinVehicleCollisionDamageScale value=\"0.00000000\"/>
+<MaxVehicleCollisionDamageScale value=\"0.00000000\"/>
+<SprintReplenishRateMultiplier value=\"99.50000000\"/>
+<SprintReplenishRateMultiplierBike value=\"99.25000000\"/>
+<MaxTimeToTrespassWhileSwimmingBeforeDeath value=\"999999.00000000\"/>";
+        let found = find_player_tuning_hack(ymt).expect("should flag");
+        assert!(found.contains("SprintReplenishRateMultiplier=99.5"));
+        assert!(found.contains("SprintReplenishRateMultiplierBike=99.25"));
+        assert!(found.contains("VehicleCollisionDamageScale=0"));
+
+        let rpf = build_rpf(&[TestEntry {
+            name: "playerinfo.ymt",
+            data: ymt,
+        }]);
+        let path = write_temp("playertune", &rpf);
+        let reasons = analyze_rpf(&path);
+        let _ = std::fs::remove_file(&path);
+        assert!(
+            reasons[0].starts_with("PLAYER TUNING HACK"),
+            "got {reasons:?}"
+        );
+    }
+
+    #[test]
+    fn player_tuning_check_ignores_normal_or_single_tweaks() {
+        assert!(find_player_tuning_hack(
+            b"<Item type=\"CPlayerInfo__Tunables\"><SprintReplenishRateMultiplier value=\"1.0\"/>"
+        )
+        .is_none());
+        assert!(find_player_tuning_hack(
+            b"<Item type=\"CPlayerInfo__Tunables\"><SprintReplenishRateMultiplier value=\"99\"/>"
+        )
+        .is_none());
+        assert!(find_player_tuning_hack(b"<SprintReplenishRateMultiplier value=\"99\"/>").is_none());
     }
 }
